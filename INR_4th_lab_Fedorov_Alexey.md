@@ -1,4 +1,4 @@
-# INR Lab 4
+# INR Lab 4 - OSPF
 
 ## Done by Fedorov Alexey
 
