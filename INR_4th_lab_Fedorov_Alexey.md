@@ -145,3 +145,50 @@ To confirm that the system is functioning correctly, I checked the neighbor stat
 
 ![image](https://github.com/user-attachments/assets/417d2d5b-acb4-4e76-9a71-c2df2c3a2c5e)
 
+# Task 3 - OSPF Verification
+
+## 3.1 How can you check if you have a full adjacency with your router neighbor?
+
+To confirm this, I need to ensure that the OSPF neighbor relationship has reached the **Full** state. As mentioned in task 2.5, the **Full** state signifies that OSPF routers have successfully exchanged their link-state information and are fully synchronized. For instance, I checked the neighbor status on `router-4`, and the state parameter shows a value of **"Full"**.
+
+![image](https://github.com/user-attachments/assets/a9da0255-88da-4352-821c-c89b99f14239)
+
+## 3.2 How can you check in the routing table which networks did you receive from your neighbors?
+
+To check the routes received from OSPF neighbors, we use the command:  
+
+```bash
+/ip route print where ospf
+```  
+
+This command displays all routes that were learned through OSPF, allowing us to verify connectivity and routing updates within the network. Let's try it on `router-2`.
+
+![image](https://github.com/user-attachments/assets/30534d28-3949-4c9b-9101-dfc1d83bd8b5)
+
+## 3.3 Use traceroute to verify that you have a full OSPF network.
+
+Let's test network with traceroute. I will check route from `router-1` to `client-4`
+
+![image](https://github.com/user-attachments/assets/fc777275-c533-4638-ba7c-0050a09d7d65)
+
+## 3.4 Which router is selected as DR and which one is BDR ?
+
+**Designated Router (DR)** is responsible for creating and distributing Link-State Advertisements (LSAs) within a broadcast network segment. It helps minimize OSPF traffic by ensuring that only the DR and **Backup Designated Router (BDR)** exchange LSAs with other routers, while the remaining routers communicate solely with the DR and BDR. The router with the highest Router ID on the segment is typically elected as the DR. 
+
+**BDR** serves as a backup, passively listening to all LSAs and maintaining a copy of the Link-State Database (LSDB). If the DR fails, the BDR automatically assumes its role, ensuring network stability.
+
+To determine the DR and BDR, we need to display the neighbor information. In my network, the **Designated Router (DR)** is **192.168.1.12**, and the **Backup Designated Router (BDR)** is **192.168.1.13**. Additionally, for the subnet connecting `router-3` and `router-4`, the DR is **192.168.15.2**, while the BDR is **192.168.15.1**.
+
+![image](https://github.com/user-attachments/assets/563ecb44-2e06-4254-a3b6-d6b95e1eb673)
+
+## 3.5 Check what is the cost for each network that has been received by OSPF in the routing table.
+
+We can see **Distance** parameter in routes table. In MikroTik OSPF, the **Distance** parameter represents the **administrative distance**, with a default value of **110** for OSPF. It is used to determine the preferred route when multiple routing options exist, with the router selecting the route that has the lowest distance value.
+
+![image](https://github.com/user-attachments/assets/2fe7435a-260b-4d26-8f46-83066af06e8a)
+
+## References
+
+- https://help.mikrotik.com/docs/spaces/ROS/pages/9863229/OSPF
+- https://wiki.mikrotik.com/Manual:OSPF-examples
+- https://www.reddit.com/r/mikrotik/comments/qnzq23/trying_to_learn_it_but_cant_get_ospf_working/
