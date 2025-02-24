@@ -151,10 +151,63 @@ I installed `MicrotiK CHR` applicance.
 
 ![image](https://github.com/user-attachments/assets/45018a0d-3879-47e4-ad9c-f00af39d069a)
 
+## 3.2 Create Internal network for Worker instance
+
 Next step,I built topology.
 
 ![image](https://github.com/user-attachments/assets/3186dbf3-d51b-436b-9e93-987195591fcc)
 
-## 3.2 Create Internal network for Worker instance
 
+## 3.3 Connect your Gateway to the internet and to your workstation/host
+
+I connected it to internet through Cloud. To get ip address i had to configure `dchp-clinet` on router. Let's check connectivity.
+
+![image](https://github.com/user-attachments/assets/bd779145-8aca-44a1-bed9-70ce3cf4994d)
+
+## 3.4 Setup the gateway for Admin, Web and Worker, then check their connectivity. 
+
+I created 2 networks: Internal(Worker) and External(Web & Admin). 
+
+Internal is 172.10.0.0/24
+External is 192.133.7.0/24
+
+Let's configure router and hosts.
+
+Router configuration:
+
+![image](https://github.com/user-attachments/assets/cc62993f-0643-46c0-9d58-2b9e8bfb16fe)
+
+Web and Admin configuration:
+
+![image](https://github.com/user-attachments/assets/c6b9cb78-7b3c-4a48-a5f2-5f0e53f41949)
+
+![image](https://github.com/user-attachments/assets/7bb9e4c0-574d-44b1-b4f7-31cc16b6caff)
+
+Worker:
+
+![image](https://github.com/user-attachments/assets/068f53f2-35b9-4439-b3b0-0836ece80182)
+
+Let's check connectivity from Web:
+
+![image](https://github.com/user-attachments/assets/5bc76283-8528-4c4c-b7c4-5bec9787428e)
+
+Everything works!
+
+## 3.5 Configure port forwarding for http and ssh to Web and Admin respectively. 
+
+To forward ports, I have to configure firewall settings. I will add 2 rules for each host:
+
+Forward rule:
+
+![image](https://github.com/user-attachments/assets/8399a6f4-b731-4f80-a483-99bcb0375413)
+
+This rule options:
+- dst-address, dst-post - address to forward from.
+- to-address, to-port - address to forward to
+- chain - firewall chain to add rule
+- action - type of action.
+
+Allow forwarding rule:
+
+![image](https://github.com/user-attachments/assets/42ab570b-c371-4732-86ad-31d5a54fb2e3)
 
