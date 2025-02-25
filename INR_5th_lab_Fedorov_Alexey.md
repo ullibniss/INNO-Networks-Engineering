@@ -138,3 +138,37 @@ New limitations were applied.
 
 ## 2.5 Deploy and verify your QoS rules to prioritize the downloading of a file (or any other scenario) over the bandwidth test.
 
+To configure QoS rules, I user the mangle table in firewall. Mangle is a firewall functionality that allows marking and modifying packets to enable advanced routing, traffic shaping, and bandwidth management. 
+
+I set up two rules: 
+
+- For transfer traffic
+- For iperf3 test traffic
+
+Both rules are port-based. Iperf operates on port 5201.
+
+Let's configure it on router.
+
+![image](https://github.com/user-attachments/assets/fd7ed96c-f2f9-48ce-9719-ae3280e168ad)
+
+When rules are ready, let's configure QoS rules? based on packet marks.
+
+![image](https://github.com/user-attachments/assets/accfb71f-89d3-4e2c-bd7f-0429e491c6cb)
+
+Let's test configurations.
+
+### Test: File tranfer (`client-1` -> `client-3`)
+
+![image](https://github.com/user-attachments/assets/b885b85e-d237-483e-ac5b-b8e5f77311a4)
+
+![image](https://github.com/user-attachments/assets/3a577708-de67-4422-8a6b-ab7cc583ce40)
+
+Here we can see that limitations works. Note: on first picture receiver has 0 bitrate because I interrupted transfer. This is reason why I inserted 2nd picture with receiver
+
+### Test: default iperf3 benchmark (`client-2` -> `client-4`)
+
+![image](https://github.com/user-attachments/assets/342ee891-04b5-4ab2-bcaf-bb227dace5f7)
+
+Bitrate is near 250K/sec. Rules works!
+
+## 2.6 What is the difference between the QoS rules to traffic allocation and priority-based QoS? Try to set up each of them and show then them. In which tasks of this lab do you use one or the other?
