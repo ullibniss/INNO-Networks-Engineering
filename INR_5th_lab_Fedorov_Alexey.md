@@ -172,3 +172,53 @@ Here we can see that limitations works. Note: on first picture receiver has 0 bi
 Bitrate is near 250K/sec. Rules works!
 
 ## 2.6 What is the difference between the QoS rules to traffic allocation and priority-based QoS? Try to set up each of them and show then them. In which tasks of this lab do you use one or the other?
+
+**Traffic Allocation QoS**: This method reserves a fixed or guaranteed portion of bandwidth for specific traffic types or flows, irrespective of their priority levels. It ensures that critical traffic receives a minimum required bandwidth while preventing other traffic from overwhelming the network. This is achieved by setting bandwidth limits for each traffic type. It is ideal for use cases where consistent throughput is essential, such as video conferencing or VoIP.
+
+**Priority-Based QoS**: This approach assigns priority levels to different types of traffic, ensuring that high-priority traffic is processed before lower-priority traffic during network congestion. It enhances network efficiency by dynamically managing traffic based on its importance. Configuration involves setting priority values in queues, where lower values indicate higher priority. This method is well-suited for scenarios requiring flexible traffic management, such as prioritizing real-time gaming over background file downloads.
+
+## 2.7 Choice and install any tool that you like for bandwidth control/netflow analysis/network control & monitoring. Play around with the network settings and show the different QoS metrics via UI.
+
+
+
+## 2.8 Try to answer the question: packet drops can occur even in an unloaded network where there is no queue overflow. In what cases and why does this happen?
+
+### Hardware or software limitations
+
+Packet drops can occur in an unloaded network even when there is no queue overflow due to various underlying factors. One common reason is **hardware or software limitations** in network devices, such as routers or switches. These devices have finite processing capabilities, and if they are overwhelmed by high packet rates or complex operations (e.g., deep packet inspection, encryption, or NAT), they may drop packets despite the network not being congested. This is especially true in low-end or misconfigured devices that lack the resources to handle traffic efficiently.
+
+### Misconfigurations
+
+Another cause is **misconfigurations** in the network setup. For example, mismatched MTU (Maximum Transmission Unit) sizes between devices can lead to packet fragmentation issues, where packets are dropped because they cannot be properly reassembled. Similarly, incorrect routing tables, firewall rules, or QoS policies can inadvertently cause packets to be discarded even when bandwidth is available. These issues often arise from human error or lack of proper network tuning.
+
+### Protocol-specific behavior
+
+**protocol-specific behavior** can also result in packet drops. For instance, TCP retransmissions or ICMP messages might be dropped due to security policies or rate-limiting mechanisms. Additionally, certain protocols or applications may generate malformed packets that are discarded by network devices as a safety measure. In such cases, the drops are not due to congestion but rather to the inherent design or operational logic of the network components. Addressing these issues requires careful analysis of device configurations, traffic patterns, and protocol behavior.
+
+# Task 3 - QoS verification & packets analysis
+
+## 3.1 How can you check if your QoS rules are applied correctly? List and describe the various methods.
+
+### Queue stats
+
+We can use `queue tree print stats` command to show some statistics of usage of our rules.
+
+![image](https://github.com/user-attachments/assets/95b09814-faa0-42b2-a8ab-e689f37b7a9f)
+
+### Firewall stats
+
+We can also watch stats on firewall tables. In my case is `mangle`.
+
+![image](https://github.com/user-attachments/assets/31edefdd-b07c-40e8-9463-1b405e0e7703)
+
+### Benchmark tools
+
+Tools for benchmark (`iperf3`, that we used earlier or `iftop`) are also useful to determine whether rules work or not.
+
+## 3.2 Try to use Wireshark to see the QoS packets. How does this depend on the number of routers in the network topology?
+
+# References
+
+- https://iperf.fr/iperf-doc.php
+- https://en.wikipedia.org/wiki/Quality_of_service
+- https://help.mikrotik.com/docs/spaces/ROS/pages/189497483/Quality+of+Service
