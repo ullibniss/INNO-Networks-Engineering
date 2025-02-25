@@ -76,3 +76,65 @@ To set a speed limit between `client-1` and `client-4`, I used `/queue/simple`. 
 
 ## 2.3 Run a bandwidth testing tool, see what is the max speed you can get and verify your speed limitation. Compare the speed between the different hosts.
 
+I used `iperf3` for testing. `iperf3` is a tool to check network performance. It measures speed, delay, and other network details between two devices. It works in client-server mode and is often used to find and fix network problems.
+
+There server and client mode on `iperf3`. I will use client mode on client from i want to make request and server mode on client to i want make request.
+
+### Test: client-1 -> client-4
+
+Running client mode on `client-1` and server mode on `client-4`:
+
+![image](https://github.com/user-attachments/assets/f475d96f-7d0e-407a-94b0-4bf87e8feffa)
+
+![image](https://github.com/user-attachments/assets/c0e3b722-2cf2-49b0-b47e-312b2d89f745)
+
+As we can see network speed is about 322Kbit/sec. Limitations works!
+
+### Test: client-1 -> client-3
+
+This test must show us that limitations work only for `client-1` -> `client-4` route.
+
+Running client mode on `client-1` and server mode on `client-3`:
+
+![image](https://github.com/user-attachments/assets/f9a98d47-d711-4246-b712-fbdd8dd730e4)
+
+![image](https://github.com/user-attachments/assets/2cee85ea-76fc-40b5-8175-cfc8cb8742c0)
+
+Bitrate - 1Mbits/sec. This means that limitation does not work for `client-1` -> `client-3` route. Everything correct.
+
+## 2.4 While your bandwidth test is still running, try to download a file from one host to the other host and see what is the max speed you can get. If you have more than two hosts on the network, play around with different speed values and show it.
+
+I need to create large file for testing. I used `dd` to generate file:
+
+```
+dd if=/dev/urandom of=test bs=322K count=1337
+```
+
+![image](https://github.com/user-attachments/assets/ecb4e497-91e5-4eea-b17d-9d05c3aa880b)
+
+### Test: file transfer `client-1` -> `client-4`:
+
+I can measure file transfer bitrate with `iperf3`.
+
+![image](https://github.com/user-attachments/assets/6b0bb33d-ac8a-4440-bd82-48e4b1871ead)
+
+![image](https://github.com/user-attachments/assets/28d57f0c-fb51-4d70-8e69-56383d480e59)
+
+As we can see, file transfer has the same bitrate.
+
+### Test: file transfer `client-1` -> `client-4`, but another limit
+
+I changed limit for route. Limit is 133K.
+
+![image](https://github.com/user-attachments/assets/3d36ddb5-33d9-4689-b609-af430f3014bc)
+
+Let's run file transfer.
+
+![image](https://github.com/user-attachments/assets/5502ec6d-628d-4b66-88bc-a8555a870ee2)
+
+![image](https://github.com/user-attachments/assets/51b6d056-3b48-4cca-9516-49aa719bee34)
+
+New limitations were applied.
+
+## 2.5 Deploy and verify your QoS rules to prioritize the downloading of a file (or any other scenario) over the bandwidth test.
+
