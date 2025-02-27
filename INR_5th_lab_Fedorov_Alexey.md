@@ -177,6 +177,12 @@ Bitrate is near 250K/sec. Rules works!
 
 **Priority-Based QoS**: This approach assigns priority levels to different types of traffic, ensuring that high-priority traffic is processed before lower-priority traffic during network congestion. It enhances network efficiency by dynamically managing traffic based on its importance. Configuration involves setting priority values in queues, where lower values indicate higher priority. This method is well-suited for scenarios requiring flexible traffic management, such as prioritizing real-time gaming over background file downloads.
 
+### Traffic Allocation QoS
+
+
+
+
+
 ## 2.7 Choice and install any tool that you like for bandwidth control/netflow analysis/network control & monitoring. Play around with the network settings and show the different QoS metrics via UI.
 
 
@@ -216,6 +222,9 @@ We can also watch stats on firewall tables. In my case is `mangle`.
 Tools for benchmark (`iperf3`, that we used earlier or `iftop`) are also useful to determine whether rules work or not.
 
 ## 3.2 Try to use Wireshark to see the QoS packets. How does this depend on the number of routers in the network topology?
+
+
+
 
 # References
 
