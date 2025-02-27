@@ -61,6 +61,6 @@ There are opened ports in list, we can close them by disabling services. If we w
 
 Let's scan with `nmap` again.
 
-
 Port 2000 still opened. To close it we need to disable bandwidth-server.
+
 
