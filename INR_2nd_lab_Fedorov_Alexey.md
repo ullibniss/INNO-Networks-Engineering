@@ -58,9 +58,76 @@ We see there are several ports opened and some of them are seemed to be unknown 
 
 There are opened ports in list, we can close them by disabling services. If we will use firewall rules, `nmap` still will see ports, but status will be `filtered`
 
+![image](https://github.com/user-attachments/assets/d3dc692a-d66c-42b4-b01f-4e11389ebabb)
 
 Let's scan with `nmap` again.
 
+![image](https://github.com/user-attachments/assets/c64a897f-c786-4553-9674-9fd79de36b4e)
+
 Port 2000 still opened. To close it we need to disable bandwidth-server.
 
+![image](https://github.com/user-attachments/assets/f7c4f090-1286-4664-95f6-93c3967ee7df)
+
+![image](https://github.com/user-attachments/assets/1b25ea58-6383-45ad-b86b-f24387a53fd3)
+
+Now we have only our ports opened and 23 (telnet port for shell connection).
+
+## 1.4 It suppose that some scanners start by scanning the known ports and pinging a host to see if it is alive.
+
+### 1.4.1 Scan the Worker VM from Admin. Can you see any ports?
+
+I used `nmap` to scan `Worker` from `Admin`.
+
+![image](https://github.com/user-attachments/assets/53e0d73a-c830-4ad6-8e13-3b6e545c8ebc)
+
+The only port that opened is 22. This is because sshd pre-installed and enabled on Ubuntu Cloud.
+
+### 1.4.2 Block ICMP traffic on Worker and change the port for SSH to one that is above 10000
+
+To block ICMP, i reconfigured `/etc/sysctl.conf` option:
+
+```
+net.ipv4.icmp_echo_ignore_all=1
+```
+
+![image](https://github.com/user-attachments/assets/9b3e409a-f33e-450a-940d-4d67345880fd)
+
+![image](https://github.com/user-attachments/assets/9d1b945d-9669-40fd-a91c-dcd5ab8c97b9)
+
+I also changed SSHd port in `/etc/ssh/sshd_config` with option:
+
+```
+Port 13377
+```
+
+![image](https://github.com/user-attachments/assets/56683524-bd7a-4358-bb95-631610dec62d)
+
+### 1.4.3 Scan it without extra arguments.
+
+I executed `nmap` scan again.
+
+![image](https://github.com/user-attachments/assets/f14211be-3118-409a-bf35-2a678e8c743f)
+
+Since port out of range 1-1000, it was not detected. But host still is UP, despite the ICMP block. This is because `nmap` operates not only ICMP protocol to detect host is UP.
+
+### 1.4.4 Now make necessary changes to the command to force the scan on all possible ports.
+
+Let's modify command to:
+
+```
+nmap -p 1-65534 172.10.0.100
+```
+![image](https://github.com/user-attachments/assets/c8843f36-10a6-4012-9083-fc5741dd0ae9)
+
+Now ssh port was detected.
+
+### 1.4.5 Gather some information about your open ports on Web (ssh and http).
+
+![image](https://github.com/user-attachments/assets/af40c664-b745-4fdd-bf34-e99c3560529d)
+
+As we can see, 22(ssh) and 80(http) are opened.
+
+# Task 2 - Traffic Captures
+
+## 2.1 . Access your Web's http page from outside and capture the traffic between the gateway and the bridged interface.
 
