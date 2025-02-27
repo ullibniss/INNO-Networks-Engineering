@@ -164,6 +164,10 @@ I connected it to internet through Cloud. To get ip address i had to configure `
 
 ![image](https://github.com/user-attachments/assets/bd779145-8aca-44a1-bed9-70ce3cf4994d)
 
+Unfortunately, Innopolis router does not allow to connect beetween hosts in LAN. Because of this I connected router to local bridged network and configured IP manually with address `172.19.0.100`.
+
+![image](https://github.com/user-attachments/assets/e15fe541-abde-4bc3-9418-a1810044aab2)
+
 ## 3.4 Setup the gateway for Admin, Web and Worker, then check their connectivity. 
 
 I created 2 networks: Internal(Worker) and External(Web & Admin). 
@@ -175,7 +179,7 @@ Let's configure router and hosts.
 
 Router configuration:
 
-![image](https://github.com/user-attachments/assets/cc62993f-0643-46c0-9d58-2b9e8bfb16fe)
+![image](https://github.com/user-attachments/assets/5a5a2207-e208-4665-8ed7-4bec7d3afbdb)
 
 Web and Admin configuration:
 
@@ -197,9 +201,9 @@ Everything works!
 
 To forward ports, I have to configure firewall settings. I will add 2 rules for each host:
 
-Forward rule:
+Forward rules:
 
-![image](https://github.com/user-attachments/assets/8399a6f4-b731-4f80-a483-99bcb0375413)
+![image](https://github.com/user-attachments/assets/c68851c0-b42d-4226-a3f4-c1c0ab6c3282)
 
 This rule options:
 - dst-address, dst-post - address to forward from.
@@ -207,7 +211,21 @@ This rule options:
 - chain - firewall chain to add rule
 - action - type of action.
 
-Allow forwarding rule:
+## 3.6 Check that you can ssh to the Admin and access your web page from your workstation/host.
 
-![image](https://github.com/user-attachments/assets/42ab570b-c371-4732-86ad-31d5a54fb2e3)
+Let's check Web page, I made a request from host machine:
 
+![image](https://github.com/user-attachments/assets/3324b4bf-fedb-4ef0-a12c-50cf6d899075)
+
+SSH to admin:
+
+![image](https://github.com/user-attachments/assets/8e1b7ef5-36e4-472f-b98c-94c4e3d781c0)
+
+Everything works!
+
+# References
+
+- https://docs.gns3.com/docs/
+- https://netplan.readthedocs.io/en/stable/examples/
+- https://www.youtube.com/watch?v=BQRIFZwil-s
+- https://help.mikrotik.com/docs/spaces/ROS/pages/3211299/NAT
