@@ -13,11 +13,11 @@ You might need to substitute the "dummy" Worker VPC node from Lab 1 topology by 
 Ubuntu Cloud Guest instance. So, the lab topology could be as following:
 ```
 
-I swapped worker PC with Ubuntu Cloud:
+I swapped the worker PC with Ubuntu Cloud Guest.
 
 ![image](https://github.com/user-attachments/assets/fa6ffa90-31f6-4f1e-b191-029f16095c9a)
 
-I also added second gateway for router, because first one does not provide network access. And as I said in previous lab, interface with internet access has router that does not allow connection beetwen LAN hosts.
+I also added a second gateway for the router because the first one does not provide network access. And as I said in the previous lab, the interface with internet access has a router that does not allow connections between LAN hosts.
 
 ![image](https://github.com/user-attachments/assets/010cc06f-a8a4-4f1c-92cf-e9898fc2aebd)
 
@@ -26,21 +26,29 @@ I also added second gateway for router, because first one does not provide netwo
 
 ## 1.1 Check the open ports and listening Unix sockets against ssh (22) and http (80) on Admin and Web respectively.
 
-Let's check Web port with `netstat`. I will use `ss` utility instead of netstat, because `netstat` is deprecated:
+### netstat
+
+`netstat` (or its modern alternative ss) - is a network utility tool used to display network connections, routing tables and network protocol statistics. 
+
+Let's check the web port with `netstat`. I will use the `ss` utility instead of `netstat` because `netstat` is deprecated.
 
 ![image](https://github.com/user-attachments/assets/0da6ef85-b632-4c86-9df7-c3d1cce10bd5)
 
-We can see that `nginx` opened port 80 and LISTENING for connections.
+We can see that `nginx` opened port 80 and is LISTENING for connections.
 
-Next step is to check Admin SSH port (22) with lsof:
+### lsof
+
+`lsof` - is a powerful utility used to display information about files that are currently open by processes on a system. It is \*musthave\* tool for identifying network connections and open files related to network activity. It can be used to trace which processes are holding active sockets, whether they are listening for incoming connections or communicating over the network.
+
+The next step is to check the Admin SSH port (22) with `lsof`:
 
 ![image](https://github.com/user-attachments/assets/aa7780b4-b913-475e-ac35-00fa33852031)
 
-We can see that port 22 is opened and LISTENING for connections.
+We can see that port 22 is open and LISTENING for connections.
 
 ## 1.2 Scan your gateway from the outside. What are the known open ports?
 
-I can scan host using `nmap` with the following command:
+I can scan the host using `nmap` with the following command:
 
 ```
 nmap 172.19.0.100
@@ -48,15 +56,15 @@ nmap 172.19.0.100
 
 ![image](https://github.com/user-attachments/assets/e02793bc-0fda-4018-b1d0-b1e59b1a10f6)
 
-There are many ports opened and our 22,8080 ports are in this list.
+There are many ports open, and our ports 22 and 8080 are in this list.
 
 ## 1.3 A gateway has to be transparent, you should not see any port that is not specifically forwarded. Adjust your firewall rules to make this happen. Disable any unnecessary services and scan again.
 
-We see there are several ports opened and some of them are seemed to be unknown for the nmap . Let's check the running services on these ports:
+We see there are several ports open, and some of them seem to be unknown to `nmap`. Let's check the running services on these ports:
 
 ![image](https://github.com/user-attachments/assets/ac9f5bfd-59f3-4351-be9f-2c48ec254c75)
 
-There are opened ports in list, we can close them by disabling services. If we will use firewall rules, `nmap` still will see ports, but status will be `filtered`
+There are open ports in the list; we can close them by disabling the services. If we use firewall rules, `nmap` will still see the ports, but their status will be `filtered`.
 
 ![image](https://github.com/user-attachments/assets/d3dc692a-d66c-42b4-b01f-4e11389ebabb)
 
@@ -64,13 +72,13 @@ Let's scan with `nmap` again.
 
 ![image](https://github.com/user-attachments/assets/c64a897f-c786-4553-9674-9fd79de36b4e)
 
-Port 2000 still opened. To close it we need to disable bandwidth-server.
+Port 2000 is still open. To close it, we need to disable the bandwidth-server.
 
 ![image](https://github.com/user-attachments/assets/f7c4f090-1286-4664-95f6-93c3967ee7df)
 
 ![image](https://github.com/user-attachments/assets/1b25ea58-6383-45ad-b86b-f24387a53fd3)
 
-Now we have only our ports opened and 23 (telnet port for shell connection).
+Now we have only our ports open and port 23 (telnet port for shell connection).
 
 ## 1.4 It suppose that some scanners start by scanning the known ports and pinging a host to see if it is alive.
 
@@ -80,11 +88,11 @@ I used `nmap` to scan `Worker` from `Admin`.
 
 ![image](https://github.com/user-attachments/assets/53e0d73a-c830-4ad6-8e13-3b6e545c8ebc)
 
-The only port that opened is 22. This is because sshd pre-installed and enabled on Ubuntu Cloud.
+The only port that is open is 22. This is because `sshd` is pre-installed and enabled on Ubuntu Cloud.
 
 ### 1.4.2 Block ICMP traffic on Worker and change the port for SSH to one that is above 10000
 
-To block ICMP, i reconfigured `/etc/sysctl.conf` option:
+To block ICMP, I reconfigured the `/etc/sysctl.conf` option:
 
 ```
 net.ipv4.icmp_echo_ignore_all=1
@@ -94,7 +102,7 @@ net.ipv4.icmp_echo_ignore_all=1
 
 ![image](https://github.com/user-attachments/assets/9d1b945d-9669-40fd-a91c-dcd5ab8c97b9)
 
-I also changed SSHd port in `/etc/ssh/sshd_config` with option:
+I also changed the SSHd port in `/etc/ssh/sshd_config` with the option:
 
 ```
 Port 13377
@@ -104,44 +112,45 @@ Port 13377
 
 ### 1.4.3 Scan it without extra arguments.
 
-I executed `nmap` scan again.
+I executed the `nmap` scan again.
 
 ![image](https://github.com/user-attachments/assets/f14211be-3118-409a-bf35-2a678e8c743f)
 
-Since port out of range 1-1000, it was not detected. But host still is UP, despite the ICMP block. This is because `nmap` operates not only ICMP protocol to detect host is UP.
+Since the port is out of the range 1-1000, it was not detected. But the host is still UP, despite the ICMP block. This is because `nmap` operates using more than just the ICMP protocol to detect if a host is UP.
 
 ### 1.4.4 Now make necessary changes to the command to force the scan on all possible ports.
 
-Let's modify command to:
+Let's modify the command to:
 
 ```
 nmap -p 1-65534 172.10.0.100
 ```
+
 ![image](https://github.com/user-attachments/assets/c8843f36-10a6-4012-9083-fc5741dd0ae9)
 
-Now ssh port was detected.
+Now the SSH port was detected.
 
 ### 1.4.5 Gather some information about your open ports on Web (ssh and http).
 
 ![image](https://github.com/user-attachments/assets/af40c664-b745-4fdd-bf34-e99c3560529d)
 
-As we can see, 22(ssh) and 80(http) are opened.
+As we can see, ports 22 (SSH) and 80 (HTTP) are open.
 
 # Task 2 - Traffic Captures
 
 ## 2.1 Access your Web's http page from outside and capture the traffic between the gateway and the bridged interface.
 
-I will use Wireshark for this purpose. I will scan `br-c371f19bc2ea` interface.
+I will use Wireshark for this purpose. I will scan the `br-c371f19bc2ea` interface.
 
 ![image](https://github.com/user-attachments/assets/7f808938-3813-471b-800a-435845d17535)
 
 ### Can you see what is being sent?
 
-Yes. I can that HTTP request was sent from `172.19.0.1` to `172.19.0.100`(packet 6) and back(packet 10). I can also see TCP handshake (SYN -> SYN+ACK -> ACK)(packets 2,3,4).
+Yes. I can see that an HTTP request was sent from `172.19.0.1` to `172.19.0.100` (packet 6) and back (packet 10). I can also see the TCP handshake (SYN -> SYN+ACK -> ACK) (packets 2, 3, 4).
 
 ### What kind of information can you get from this?
 
-This is HTTP traffic, because of this, i can get the whole web page.
+This is HTTP traffic, because of this, I can retrieve the entire web page.
 
 ![image](https://github.com/user-attachments/assets/07a88958-8878-40e6-880b-1d0026325c2c)
 
@@ -163,7 +172,7 @@ I started capturing traffic and then connected to `Admin` with `SSH`.
 
 ### Can you see what is being sent?
 
-Yes and No. I can see what kind of packet is being sent. It is SSHv2 and TCP. But I can see packets content, because they are encrypted. I still can see TCP handshake (packets 11,12,13).
+Yes and no. I can see what kind of packet is being sent. It is SSHv2 and TCP. But I cannot see the packet content because it is encrypted. I can still see the TCP handshake (packets 11, 12, 13).
 
 Encrypted data:
 
@@ -171,13 +180,13 @@ Encrypted data:
 
 ### What kind of information can you get from this? What are the names of the ciphers used?
 
-I see exchange of supported SSH protocol versions `SSH-2.0-OpenSSH_8.9p1` and `SSH-2.0-OpenSSH_9.6p1`. 
+I see the exchange of supported SSH protocol versions: `SSH-2.0-OpenSSH_8.9p1` and `SSH-2.0-OpenSSH_9.6p1`. 
 
-Moreover, there was a key exchange: client and server made a consensus on a key exchange protocol: `Elliptic Curve Diffie-Hellman Key Exchange Init`.
+Moreover, there was a key exchange: the client and server reached a consensus on a key exchange protocol: `Elliptic Curve Diffie-Hellman Key Exchange Init`.
 
 ## 2.3 Configure the Burp suite as a proxy on your machine and intercept your HTTP traffic.
 
-I installed BurpSuite and opened proxy tab. Then I started browser and turned on interseption. 
+I installed BurpSuite and opened the proxy tab. Then I started the browser and turned on interception.
 
 ![image](https://github.com/user-attachments/assets/f834ec7c-c257-4942-b973-2f990ddec6ab)
 
@@ -187,28 +196,27 @@ Let's visit our `Web` page.
 
 ![image](https://github.com/user-attachments/assets/5ac9ca50-8ca6-40c2-8556-0c71a1acfdda)
 
-As we can wee, request was intercepted. Now we can change any information, that will be sent to server.
+As we can see, the request was intercepted. Now we can change any information that will be sent to the server.
 
-We can also intercept Responses. 
+We can also intercept responses.
 
 ![image](https://github.com/user-attachments/assets/aaafc819-8fb0-4c7c-9ece-f800a7c4e5b6)
 
-Let's change web page. 
+Let's change the web page.
 
 ![image](https://github.com/user-attachments/assets/363df517-cdce-4a9a-b63e-f7c52d8ea68b)
 
 ![image](https://github.com/user-attachments/assets/b4ae0fd3-3316-491a-97e1-0a85635b356c)
 
-
 ### Why are you able to do this here and not in an SSH connection?
 
-HTTP traffic is insecure, allowing any information in a request to be modified, unlike SSH, which uses public key cryptography to protect against Man-in-the-Middle attacks.
+HTTP traffic is insecure, allowing any information in a request to be modified, unlike SSH, which uses public-key cryptography to protect against man-in-the-middle attacks.
 
 # Task 3 - IPv6
 
 ## 3.1 Configure IPv6 from the Web Server to the Worker. This includes IPs on the servers and the default gateway.
 
-Firstly I reconfigured all hosts and Router.
+First, I reconfigured all hosts and the router.
 
 Router:
 
@@ -230,13 +238,13 @@ It works!
 
 ## 3.2 Access the Web's http page using IPv6 from Admin while capturing the traffic again. Can you see the difference? What's the difference in packages? Explain.
 
-I start capture. Let's access the page.
+I started the capture. Let's access the page.
 
 ![image](https://github.com/user-attachments/assets/e729a96a-cad2-4fa1-a568-ff52b1360593)
 
 ![image](https://github.com/user-attachments/assets/d6324b6a-316b-43e1-93ff-ae4b8738a02a)
 
-In this scenario, we observe that both the Source and Destination addresses are expressed in IPv6 format (16 bytes). Additionally, the ICMPv6 protocol is used for Neighbor Advertisement. Moreover the length of the IPv6 packet is shorter compared to IPv4. This is because of absence of fields that are present in IPv4 packets.
+In this scenario, we observe that both the source and destination addresses are expressed in IPv6 format (16 bytes). Additionally, the ICMPv6 protocol is used for Neighbor Advertisement. Moreover, the length of the IPv6 packet is shorter compared to IPv4 due to the absence of fields that are present in IPv4 packets.
 
 ## 3.3 Practice in IPv6 addresses compressing and decompressing. Write your used IPv6 addresses both in full and compact mode. Provide the calculation chain.
 
@@ -258,16 +266,16 @@ Router:
 - Short: 2001:db8:2::1
 - Long: 2001:0db8:0002:0000:0000:0000:0000:0001
 
-### Calculates
+### Calculations
 
 Long -> Short
-1) Remove leading zeros from each hexlet
-2) Replace zero hexlets with `::` . Neighbour zero hexlets is replaces by one `::`
+1) Remove leading zeros from each hextet.
+2) Replace consecutive zero hextets with `::`. Only one sequence of zero hextets is replaced by `::`.
 
 Short -> Long
-1) Determine amount of hexlets - n, count N = 8-n
-2) Insert N zero hexlets in `::`
-3) Restore leading zeros of other hexlets
+1) Determine the number of hextets (n), and calculate N = 8 - n.
+2) Insert N zero hextets where `::` is located.
+3) Restore leading zeros in the remaining hextets.
 
 # Reference
 
