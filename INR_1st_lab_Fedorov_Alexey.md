@@ -1,4 +1,4 @@
-# INR Lab 1. Networking Basics.
+# INR Lab 1: Networking Basics
 
 ## Done by Fedorov Alexey
 
