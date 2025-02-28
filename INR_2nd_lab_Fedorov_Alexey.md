@@ -1,6 +1,6 @@
 # INR Lab 2: IPv4 & IPv6
 
-## Done by Fedorov Alexey
+## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ---
 
