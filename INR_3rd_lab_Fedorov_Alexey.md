@@ -8,19 +8,19 @@
 
 ## 1.{a,b,c,d} Select a virtual switching solution that you would like to try. For example (Mikrotik, vyos, Cumulus VX).
 
-I've read instructions. Decided to use Mikrotik. Made a snapshot.
+I’ve read the instructions. I will use MikroTik. I’ve made a snapshot.
 
 # Task 2 - VLANs
 
 ## 2.a Change the topology of your network to as follows, and make the necessary configurations.
 
-I fully prepared topology:
+I have fully prepared the topology:
 
 ![image](https://github.com/user-attachments/assets/3811d487-f267-412e-bb97-4d5a890c0199)
 
 ## 2.b Configure the switches and make sure you have connectivity between the hosts.
 
-I configured switches, let's ensure connectivity:
+I have configured the switches. Let's ensure connectivity:
 
 `Web` to All:
 
@@ -62,47 +62,47 @@ The **Native VLAN** is a feature in the **802.1Q standard** that assigns a VLAN 
 
 ## 2.e Configure the VLANs on the switches to isolate the two virtual networks as follow
 
-I configured vlan as on [picture](https://i.imgur.com/zyoR0V1.png).
+I configured the VLAN as shown in the [picture](https://i.imgur.com/zyoR0V1.png).
 
 ![image](https://github.com/user-attachments/assets/a9332fa2-3d9c-44ec-96f1-d24c1805805d)
 
-Admistration configuration for example.
+Administration configuration example:
 
 ![image](https://github.com/user-attachments/assets/0b99a6c5-df15-4e29-9c14-256868752688)
 
 ## 2.f Ping between ITManager and HR, do you have replies? Ping between ITManager and Management, do you have replies? Can you see the VLAN ID in Wireshark?
 
-Let's test configuration. 
+Let's test the configuration.
 
 ### Test: Ping between ITManager and HR (HR -> ITManager)
 
 ![image](https://github.com/user-attachments/assets/ffe697ba-7f1f-4354-bf11-227854f198d1)
 
-There no replies, moreover, ITManager not reachable to HR
+There are no replies; moreover, the IT Manager is not reachable to HR.
 
-To see VLAN tag, we need to capture packet betweeb routers? because router adds this header. I will sniff Administration to Internal connection.
+To see the VLAN tag, do we need to capture packets between the routers? Because the router adds this header, I will sniff the Administration to Internal connection.
 
 ![image](https://github.com/user-attachments/assets/f7b7424f-f12e-4798-9d29-b3af76b041ea)
 
-As we can see? ARP frames had IEEE 802.1Q ID = 3 of VLAN.
+As we can see, the ARP frames have an IEEE 802.1Q ID = 3 for the VLAN.
 
 ### Test: Ping between ITManager and Management (ITManager -> Management) 
 
 ![image](https://github.com/user-attachments/assets/c156776e-baa7-4c2b-be45-584300b90430)
 
-Connection is present between ITManager and Management.
+A connection is present between IT Manager and Management.
 
-As we can see in Wireshark, ICMP requests were replied. 
+As we can see in Wireshark, the ICMP requests were replied to.
 
 ![image](https://github.com/user-attachments/assets/07187379-dc5f-4664-8747-55154b544e05)
 
 ## 2.g Configure Inter-VLAN Routing between Management VLAN and HR VLAN and Show that you can now ping between them.
 
-If configured Inter-VLAN on microtic router. I added VLANs on physical interface and connected IP Addresses.
+I configured Inter-VLAN routing on the MikroTik router. I added VLANs to the physical interface and assigned IP addresses.
 
 ![image](https://github.com/user-attachments/assets/5b0925ef-9ac1-45d9-a8ff-9d54782d84c3)
 
-Next step, I reconfigured PCs IPs.
+The next step, I reconfigured the PCs' IPs.
 
 ![image](https://github.com/user-attachments/assets/827ff0e9-301b-4764-ba57-3604e433e366)
 
@@ -116,9 +116,9 @@ It works!
 
 ## 3.a What is Link Aggregation? How does it work (briefly)? What are the possible configuration modes?
   
-Link aggregation, defined by IEEE 802.1AX (formerly IEEE 802.3ad), combines multiple links to enhance transmission performance and ensure fault tolerance. These links can be physical connections between the same devices or virtual links using proprietary protocols like Cisco VSS or Nexus VCC. A group of aggregated ports is called a Link Aggregation Group (LAG), also known as a bond, team, or port-channel, with up to 8 links. The scheduling algorithm determines how packets are distributed across links, while the Link Aggregation Control Protocol (LACP) actively monitors and manages link inclusion or removal.
+**Link aggregation**, defined by IEEE 802.1AX (formerly IEEE 802.3ad), combines multiple links to enhance transmission performance and ensure fault tolerance. These links can be physical connections between the same devices or virtual links using proprietary protocols like Cisco VSS or Nexus VCC. A group of aggregated ports is called a Link Aggregation Group (LAG), also known as a bond, team, or port-channel, with up to 8 links. The scheduling algorithm determines how packets are distributed across links, while the Link Aggregation Control Protocol (LACP) actively monitors and manages link inclusion or removal.
  
-LACP operates by exchanging frames (LACPDUs) on all enabled links. When a device detects another LACP-enabled device, they combine their links into a single logical link. LACP has two modes:  
+**LACP** operates by exchanging frames (**LACPDUs**) on all enabled links. When a device detects another LACP-enabled device, they combine their links into a single logical link. LACP has two modes:  
 - **Active**: Sends LACPDUs every second.  
 - **Passive**: Responds only when LACPDUs are received.  
 
@@ -128,27 +128,27 @@ LACP operates by exchanging frames (LACPDUs) on all enabled links. When a device
 
 ## 3.b Use link aggregation between the Web and the Gateway to have Load Balancing and Fault Tolerance as follows.
 
-I added link-aggregation in my topology.
+I added link aggregation to my topology.
 
 ![image](https://github.com/user-attachments/assets/486a23e4-4a75-4dac-babc-ab6e3193c16c)
 
-Without any configuration traffic will go only through one of the wires (old wire with configured interface). We can see it in wireshark.
+Without any configuration, traffic will go only through one of the wires (the old wire with the configured interface). We can see this in Wireshark.
 
 ![image](https://github.com/user-attachments/assets/f8ea010d-94c7-465d-b1fa-1ac0431c949f)
 
-To configure connection I will use `bonding` interfacce. A bonding interface (also known as a link aggregation interface, LAG) is a virtual interface that combines multiple physical network interfaces into a single logical interface. 
+To configure the connection, I will use a `bonding` interface. A bonding interface (also known as a link aggregation interface, LAG) is a virtual interface that combines multiple physical network interfaces into a single logical interface.
 
-Firstly, we need to configure it on Router.
+Firstly, we need to configure it on the router.
 
 ![image](https://github.com/user-attachments/assets/d6363402-c497-4912-82da-9e536107b865)
 
-Balancing in mode `balance-rr` means round-robin algorithm. 
+Balancing in mode `balance-rr` means using the round-robin algorithm.
 
-Let's configure Web server. I will use our beloved `netplan`.
+Let's configure the web server. I will use our beloved `netplan`.
 
 ![image](https://github.com/user-attachments/assets/823ac154-7052-4903-8841-7bae631bd665)
 
-When everyting is configured, let's test it.
+When everything is configured, let's test it.
 
 ### Test: ping between Web and Router (Web -> Router)
 
@@ -158,15 +158,15 @@ As we can see, balancing works. Interestingly, all ICMP requests consistently tr
 
 ## 3.c Test the Fault Tolerance by stopping one of the cables and see if you have any downtime.
 
-Let's test Fault Tolerance. Firstly I will start ping, then i will disconnect one wire.
+Let's test fault tolerance. Firstly, I will start a ping, then I will disconnect one wire.
 
-I disconnected `Web e1` <-> `External e4` and `External e3` <-> 'Router ether5'.
+I disconnected `Web e1` <-> `External e4` and `External e3` <-> `Router ether5`.
 
 ![Screenshot from 2025-02-28 08-01-13](https://github.com/user-attachments/assets/105a9dc2-506d-4f0c-9dfa-f6a46ff9155f)
 
 ![image](https://github.com/user-attachments/assets/4fd7a537-4eea-4d79-a144-5b835425177c)
 
-Everyting works correct! After disconnection, all traffic went through first connection. Moreover, there were no packet loss!
+Everything works correctly! After the disconnection, all traffic went through the first connection. Moreover, there was no packet loss!
 
 # References
 
