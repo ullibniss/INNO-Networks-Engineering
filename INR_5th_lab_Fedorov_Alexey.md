@@ -1,6 +1,6 @@
 # INR Lab 5: QoS
 
-## Done by Fedorov Alexey
+## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ---
 
