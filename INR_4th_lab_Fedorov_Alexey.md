@@ -1,6 +1,6 @@
 # INR Lab 4: OSPF
 
-## Done by Fedorov Alexey
+## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ---
 
