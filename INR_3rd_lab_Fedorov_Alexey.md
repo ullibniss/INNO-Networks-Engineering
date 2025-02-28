@@ -1,6 +1,6 @@
 # INR Lab 3: STP, VLAN, and Fault Tolerance
 
-## Done by Fedorov Alexey
+## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ---
 
