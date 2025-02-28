@@ -1,4 +1,4 @@
-# Lab 3
+![image](https://github.com/user-attachments/assets/62293e1f-2096-4fb2-a67c-9c69cc295b5a)# Lab 3
 
 ## Done by Fedorov Alexey
 
@@ -56,11 +56,11 @@ I configured switches, let's ensure connectivity:
 
 - ISL (Inter-Switch Link) - A Cisco-proprietary protocol for VLAN tagging, which encapsulates the entire Ethernet frame with a new header and trailer.
 
-## 3.d What is the Native VLAN?
+## 2.d What is the Native VLAN?
 
 The **Native VLAN** is a feature in the **802.1Q standard** that assigns a VLAN to handle untagged traffic on a switch. By default, this is **VLAN 1**, but on some switches, it can be reconfigured to another VLAN. The switch automatically assigns the Native VLAN tag to any incoming untagged frames. However, port-based VLANs have a limitation: only one VLAN can process all untagged traffic.
 
-## 3.e Configure the VLANs on the switches to isolate the two virtual networks as follow
+## 2.e Configure the VLANs on the switches to isolate the two virtual networks as follow
 
 I configured vlan as on [picture](https://i.imgur.com/zyoR0V1.png).
 
@@ -70,7 +70,7 @@ Admistration configuration for example.
 
 ![image](https://github.com/user-attachments/assets/0b99a6c5-df15-4e29-9c14-256868752688)
 
-## 3.f Ping between ITManager and HR, do you have replies? Ping between ITManager and Management, do you have replies? Can you see the VLAN ID in Wireshark?
+## 2.f Ping between ITManager and HR, do you have replies? Ping between ITManager and Management, do you have replies? Can you see the VLAN ID in Wireshark?
 
 Let's test configuration. 
 
@@ -96,7 +96,7 @@ As we can see in Wireshark, ICMP requests were replied.
 
 ![image](https://github.com/user-attachments/assets/07187379-dc5f-4664-8747-55154b544e05)
 
-## 3.g Configure Inter-VLAN Routing between Management VLAN and HR VLAN and Show that you can now ping between them.
+## 2.g Configure Inter-VLAN Routing between Management VLAN and HR VLAN and Show that you can now ping between them.
 
 If configured Inter-VLAN on microtic router. I added VLANs on physical interface and connected IP Addresses.
 
@@ -111,3 +111,68 @@ Next step, I reconfigured PCs IPs.
 ![image](https://github.com/user-attachments/assets/51045ef3-d6d1-466e-9740-013ce7156f77)
 
 It works!
+
+# Task 3 - Fault Tolerance
+
+## 3.a What is Link Aggregation? How does it work (briefly)? What are the possible configuration modes?
+  
+Link aggregation, defined by IEEE 802.1AX (formerly IEEE 802.3ad), combines multiple links to enhance transmission performance and ensure fault tolerance. These links can be physical connections between the same devices or virtual links using proprietary protocols like Cisco VSS or Nexus VCC. A group of aggregated ports is called a Link Aggregation Group (LAG), also known as a bond, team, or port-channel, with up to 8 links. The scheduling algorithm determines how packets are distributed across links, while the Link Aggregation Control Protocol (LACP) actively monitors and manages link inclusion or removal.
+ 
+LACP operates by exchanging frames (LACPDUs) on all enabled links. When a device detects another LACP-enabled device, they combine their links into a single logical link. LACP has two modes:  
+- **Active**: Sends LACPDUs every second.  
+- **Passive**: Responds only when LACPDUs are received.  
+
+**Modes:**  
+- **Scheduling Algorithm**: Determines packet distribution (e.g., MAC/IP/socket hashing, round-robin).  
+- **LACP Mode**: Active (monitors links actively) or passive (responds only). Active mode ensures failed links are removed, but compatibility with non-LACP devices must be considered to avoid mismatched configurations.
+
+## 3.b Use link aggregation between the Web and the Gateway to have Load Balancing and Fault Tolerance as follows.
+
+I added link-aggregation in my topology.
+
+![image](https://github.com/user-attachments/assets/486a23e4-4a75-4dac-babc-ab6e3193c16c)
+
+Without any configuration traffic will go only through one of the wires (old wire with configured interface). We can see it in wireshark.
+
+![image](https://github.com/user-attachments/assets/f8ea010d-94c7-465d-b1fa-1ac0431c949f)
+
+To configure connection I will use `bonding` interfacce. A bonding interface (also known as a link aggregation interface, LAG) is a virtual interface that combines multiple physical network interfaces into a single logical interface. 
+
+Firstly, we need to configure it on Router.
+
+![image](https://github.com/user-attachments/assets/d6363402-c497-4912-82da-9e536107b865)
+
+Balancing in mode `balance-rr` means round-robin algorithm. 
+
+Let's configure Web server. I will use our beloved `netplan`.
+
+![image](https://github.com/user-attachments/assets/823ac154-7052-4903-8841-7bae631bd665)
+
+When everyting is configured, let's test it.
+
+### Test: ping between Web and Router (Web -> Router)
+
+![image](https://github.com/user-attachments/assets/6800e1a4-23f3-42a5-989d-5d02d6992097)
+
+As we can see, balancing works. Interestingly, all ICMP requests consistently travel through the same link, and, as expected, all replies always use the other link.
+
+## 3.c Test the Fault Tolerance by stopping one of the cables and see if you have any downtime.
+
+Let's test Fault Tolerance. Firstly I will start ping, then i will disconnect one wire.
+
+I disconnected `Web e1` <-> `External e4` and `External e3` <-> 'Router ether5'.
+
+![Screenshot from 2025-02-28 08-01-13](https://github.com/user-attachments/assets/105a9dc2-506d-4f0c-9dfa-f6a46ff9155f)
+
+![image](https://github.com/user-attachments/assets/4fd7a537-4eea-4d79-a144-5b835425177c)
+
+Everyting works correct! After disconnection, all traffic went through first connection. Moreover, there were no packet loss!
+
+# References
+
+- https://www.sciencedirect.com/topics/computer-science/virtual-local-area-network-tag
+- https://en.wikipedia.org/wiki/VLAN
+- https://help.mikrotik.com/docs/spaces/ROS/pages/88014957/VLAN
+- https://help.mikrotik.com/docs/spaces/ROS/pages/8323193/Bonding
+- https://askubuntu.com/questions/1266154/bonding-ubuntu-20-04
+
