@@ -1,6 +1,6 @@
 # INR Lab 1: Networking Basics
 
-## Done by Fedorov Alexey
+## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ---
 
