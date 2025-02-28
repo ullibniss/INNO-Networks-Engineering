@@ -1,4 +1,4 @@
-# Lab 2
+# INR Lab 2: IPv4 & IPv6
 
 ## Done by Fedorov Alexey
 
