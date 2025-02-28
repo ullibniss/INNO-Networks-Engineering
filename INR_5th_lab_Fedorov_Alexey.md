@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/9624b4e6-0e53-488d-9518-8f916d592633)# INR Lab 5
+# INR Lab 5
 
 ## Done by Fedorov Alexey
 
