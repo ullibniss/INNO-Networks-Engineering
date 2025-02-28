@@ -1,4 +1,4 @@
-# INR Lab 5
+![image](https://github.com/user-attachments/assets/9624b4e6-0e53-488d-9518-8f916d592633)# INR Lab 5
 
 ## Done by Fedorov Alexey
 
@@ -177,15 +177,43 @@ Bitrate is near 250K/sec. Rules works!
 
 **Priority-Based QoS**: This approach assigns priority levels to different types of traffic, ensuring that high-priority traffic is processed before lower-priority traffic during network congestion. It enhances network efficiency by dynamically managing traffic based on its importance. Configuration involves setting priority values in queues, where lower values indicate higher priority. This method is well-suited for scenarios requiring flexible traffic management, such as prioritizing real-time gaming over background file downloads.
 
-### Traffic Allocation QoS
+### Test: Traffic Allocation QoS
 
+I configured different speed, but equal priority.
 
+![image](https://github.com/user-attachments/assets/2aa4189c-66a9-4969-9ad1-6240c4319e5e)
 
+![image](https://github.com/user-attachments/assets/77c5b059-0ae3-4d58-80c4-c46afddd6e2a)
 
+![image](https://github.com/user-attachments/assets/72d1f5fa-9fed-498f-a9c6-428f7f3d6d03)
+
+As we can see, default iperf3 test and file transfer have different bitrate.
+
+### Test: Priority-Based QoS
+
+In this case speed is equal, but priority is different. 
+
+![image](https://github.com/user-attachments/assets/945e946a-66b0-4abd-bd41-a6fa7a5d37a4)
+
+![image](https://github.com/user-attachments/assets/3f2dc01a-a0e1-4c94-8927-7ba5b7bd9169)
+
+![image](https://github.com/user-attachments/assets/057abad3-5f3f-455e-8b4b-6b54c3fce221)
+
+Results are good. File transfer with stict priority has bigger bitrate than default iperf3 test.
 
 ## 2.7 Choice and install any tool that you like for bandwidth control/netflow analysis/network control & monitoring. Play around with the network settings and show the different QoS metrics via UI.
 
+The mojority of tools for with GUI are to complex (for example Zabbix, Nagios - general purpose monitoring systems). On the other hand, the are many good CLI tools to Analyze, but they have no UI. I decided to use built in Mikrotik tools, because it is very convenient.
 
+I will use `torch` tool. Using this tool we can see exact bitrate of our rules in test runtime.
+
+iperf3 default:
+
+![image](https://github.com/user-attachments/assets/b64c7368-227c-41a8-8bb4-62ce63e9a74a)
+
+file transfer:
+
+![image](https://github.com/user-attachments/assets/c9324bc6-1eb9-405e-9882-52f3c8cfff32)
 
 ## 2.8 Try to answer the question: packet drops can occur even in an unloaded network where there is no queue overflow. In what cases and why does this happen?
 
@@ -193,13 +221,21 @@ Bitrate is near 250K/sec. Rules works!
 
 Packet drops can occur in an unloaded network even when there is no queue overflow due to various underlying factors. One common reason is **hardware or software limitations** in network devices, such as routers or switches. These devices have finite processing capabilities, and if they are overwhelmed by high packet rates or complex operations (e.g., deep packet inspection, encryption, or NAT), they may drop packets despite the network not being congested. This is especially true in low-end or misconfigured devices that lack the resources to handle traffic efficiently.
 
+### Routing Loops or Failures
+
+Asymmetric routing occurs when packets traveling to a destination follow a different path than those returning from it. For example, if a packet is sent out through one route but the response takes an alternate path, and the second router lacks the necessary forwarding or session state, the packet may be dropped. This can lead to communication issues or failures.
+
 ### Misconfigurations
 
 Another cause is **misconfigurations** in the network setup. For example, mismatched MTU (Maximum Transmission Unit) sizes between devices can lead to packet fragmentation issues, where packets are dropped because they cannot be properly reassembled. Similarly, incorrect routing tables, firewall rules, or QoS policies can inadvertently cause packets to be discarded even when bandwidth is available. These issues often arise from human error or lack of proper network tuning.
 
 ### Protocol-specific behavior
 
-**protocol-specific behavior** can also result in packet drops. For instance, TCP retransmissions or ICMP messages might be dropped due to security policies or rate-limiting mechanisms. Additionally, certain protocols or applications may generate malformed packets that are discarded by network devices as a safety measure. In such cases, the drops are not due to congestion but rather to the inherent design or operational logic of the network components. Addressing these issues requires careful analysis of device configurations, traffic patterns, and protocol behavior.
+**Protocol-specific behavior** can also result in packet drops. For instance, TCP retransmissions or ICMP messages might be dropped due to security policies or rate-limiting mechanisms. Additionally, certain protocols or applications may generate malformed packets that are discarded by network devices as a safety measure. In such cases, the drops are not due to congestion but rather to the inherent design or operational logic of the network components. Addressing these issues requires careful analysis of device configurations, traffic patterns, and protocol behavior.
+
+### Firewall or Security Filtering:
+
+**Packet filtering** involves the use of firewalls and other security devices to examine and control network traffic based on predefined rules. If a packet fails to comply with these rules—such as having invalid headers, belonging to an unsupported protocol, or being associated with a prohibited service—it will be blocked or dropped to prevent potential security risks.
 
 # Task 3 - QoS verification & packets analysis
 
@@ -223,8 +259,11 @@ Tools for benchmark (`iperf3`, that we used earlier or `iftop`) are also useful 
 
 ## 3.2 Try to use Wireshark to see the QoS packets. How does this depend on the number of routers in the network topology?
 
+Let's try to capture some QoS packets. I would like to sniff between `router` and `switch-3`.
 
+![image](https://github.com/user-attachments/assets/07d4aa04-a4ec-4b0e-96ee-01bc2ff843ac)
 
+The size of the network topology, particularly the number of routers, can influence how QoS markings (such as DSCP or IP precedence) are managed. As the number of routers increases, the chances of packet re-marking or drops also rise due to fluctuating network conditions. Tools like Wireshark can be used to monitor these changes. Despite these variations, the fundamental QoS mechanism stays consistent, with each router potentially altering the packet according to its configuration and the traffic conditions it encounters.
 
 # References
 
