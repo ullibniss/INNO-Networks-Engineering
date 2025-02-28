@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/62293e1f-2096-4fb2-a67c-9c69cc295b5a)# Lab 3
+# INR Lab 3: STP, VLAN, and Fault Tolerance
 
 ## Done by Fedorov Alexey
 
