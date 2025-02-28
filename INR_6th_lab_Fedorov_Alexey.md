@@ -1,4 +1,4 @@
-# NE Lab 6: MPLS
+# INR Lab 6: MPLS
 
 ## Done by Fedorov Alexey
 
