@@ -129,5 +129,76 @@ As we can see, 22(ssh) and 80(http) are opened.
 
 # Task 2 - Traffic Captures
 
-## 2.1 . Access your Web's http page from outside and capture the traffic between the gateway and the bridged interface.
+## 2.1 Access your Web's http page from outside and capture the traffic between the gateway and the bridged interface.
 
+I will use Wireshark for this purpose. I will scan `br-c371f19bc2ea` interface.
+
+![image](https://github.com/user-attachments/assets/7f808938-3813-471b-800a-435845d17535)
+
+### Can you see what is being sent?
+
+Yes. I can that HTTP request was sent from `172.19.0.1` to `172.19.0.100`(packet 6) and back(packet 10). I can also see TCP handshake (SYN -> SYN+ACK -> ACK)(packets 2,3,4).
+
+### What kind of information can you get from this?
+
+This is HTTP traffic, because of this, i can get the whole web page.
+
+![image](https://github.com/user-attachments/assets/07a88958-8878-40e6-880b-1d0026325c2c)
+
+### What do the headers mean?
+
+Headers I had are default HTTP headers:
+
+- **`User-Agent`**: Identifies the client (browser/device) making the request.  
+- **`Accept`**: Lists MIME types the client can handle.  
+- **`Referer`**: Shows the URL of the page that linked to the request.  
+- **`Accept-Encoding`**: Lists supported compression methods for the response.  
+- **`Accept-Language`**: Specifies preferred languages for the response.  
+
+## 2.2 SSH to the Admin from outside and capture the traffic (make sure to start capturing before connecting to the server).
+
+I started capturing traffic and then connected to `Admin` with `SSH`.
+
+![image](https://github.com/user-attachments/assets/1aee8e59-820a-426c-a1cf-c6fa565c770d)
+
+### Can you see what is being sent?
+
+Yes and No. I can see what kind of packet is being sent. It is SSHv2 and TCP. But I can see packets content, because they are encrypted. I still can see TCP handshake (packets 11,12,13).
+
+Encrypted data:
+
+![image](https://github.com/user-attachments/assets/869e7538-a5d3-45b8-a816-e5cc0b43bc48)
+
+### What kind of information can you get from this? What are the names of the ciphers used?
+
+I see exchange of supported SSH protocol versions `SSH-2.0-OpenSSH_8.9p1` and `SSH-2.0-OpenSSH_9.6p1`. 
+
+Moreover, there was a key exchange: client and server made a consensus on a key exchange protocol: `Elliptic Curve Diffie-Hellman Key Exchange Init`.
+
+## 2.3 Configure the Burp suite as a proxy on your machine and intercept your HTTP traffic.
+
+I installed BurpSuite and opened proxy tab. Then I started browser and turned on interseption. 
+
+![image](https://github.com/user-attachments/assets/f834ec7c-c257-4942-b973-2f990ddec6ab)
+
+### Show that you can modify the contents by changing something in the request.
+
+Let's visit our `Web` page.
+
+![image](https://github.com/user-attachments/assets/5ac9ca50-8ca6-40c2-8556-0c71a1acfdda)
+
+As we can wee, request was intercepted. Now we can change any information, that will be sent to server.
+
+We can also intercept Responses. 
+
+![image](https://github.com/user-attachments/assets/aaafc819-8fb0-4c7c-9ece-f800a7c4e5b6)
+
+Let's change web page. 
+
+![image](https://github.com/user-attachments/assets/363df517-cdce-4a9a-b63e-f7c52d8ea68b)
+
+![image](https://github.com/user-attachments/assets/b4ae0fd3-3316-491a-97e1-0a85635b356c)
+
+### Why are you able to do this here and not in an SSH connection?
+
+HTTP traffic is insecure, allowing any information in a request to be modified, unlike SSH, which uses public key cryptography to protect against Man-in-the-Middle attacks.
