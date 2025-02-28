@@ -1,6 +1,6 @@
 # INR Lab 6: MPLS
 
-## Done by Fedorov Alexey
+## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ---
 
@@ -8,12 +8,11 @@
 
 ## 1.1 In the GNS3 project, select and install a virtual routing solution that you would like to use: for example, Mikrotik (recommended), Pfsense, vyos.
 
-I use mikrotik
+I use MikroTik.
 
 ## 1.2 Prepare a simple network consisting of at least three router and two hosts. Each one of them has a different subnet, and the routers should be able to reach each other (for example, a bus topology with dynamic routing). Your network must have routing protocols configured. That's why you can use your OSPF lab project.
 
-I created BUS topology and preconfigured OSPF.
-
+I created a BUS topology and preconfigured OSPF.
 
 Let's check connectivity.
 
@@ -65,6 +64,7 @@ Routers configurations:
 ![image](https://github.com/user-attachments/assets/ebee22a9-51a0-4bbb-b77d-e55538c36c0d)
 
 Let's check whether it works:
+
 ```
 mpls ldp remote-mapping/ print
 ```
@@ -75,7 +75,7 @@ We can see that MPLS works.
 
 ## 2.3 Enable authentication (what kind of authentication did you use)? Make sure that you can ping and trace all your network.
 
-I will use OSPF MD5 authentication, because there no authentication support in MPLS. I reconfigured `interface-template` for every interface on every router.
+I will use OSPF MD5 authentication because there is no authentication support in MPLS. I reconfigured the `interface-template` for every interface on every router.
 
 ```
 /routing ospf interface-template set numbers=0,1,2,3 auth=md5 auth-id=1 auth-key=P@773ord
@@ -89,7 +89,7 @@ Configurations:
 
 ![image](https://github.com/user-attachments/assets/ed7038b6-d0d1-489a-b2c9-7682235f517a)
 
-Let's make some tests
+Let's make some tests.
 
 ### Test: Check whether authentication works and headers presents
 
@@ -101,13 +101,13 @@ Everything works!
 
 ![image](https://github.com/user-attachments/assets/39c8fe8a-8371-4d9e-96fb-74b381dc0aa6)
 
-I tested connectivity from `host-3` to all other instances. I this it is enough to say that network works!
+I tested connectivity from `host-3` to all other instances. This is enough to say that the network works!
 
 # Task 3 - Verification
 
 ## 3.1. Show your LDP neighbors.
 
-I will use the following command to show all neighbours:
+I will use the following command to show all neighbors:
 
 ```
 mpls ldp neighbor print
@@ -138,13 +138,13 @@ mpls ldp remote-mapping print
 
 ## 3.3 Show your MPLS labels.
 
-I'have taken label from tables from previous subtask.
+I have taken the label from the tables in the previous subtask.
 
 Label: `impl-null`, `16`, `17`, `18`, `19`, `20`, `21`
 
 ## 3.4 Show your forwarding table.
 
-I will use the following command to show forwarding-table:
+I will use the following command to show the forwarding table:
 
 ```
 mpls forwarding-table print
@@ -158,7 +158,7 @@ mpls forwarding-table print
 
 ## 3.5 Show your network path from one customer edge to the other customer edge.
 
-I will use `traceroute` tool to show path.
+I will use the `traceroute` tool to show the path.
 
 ### Route `router-3 (customer ether1)` -> `host-1 (e0)`
 
@@ -170,21 +170,21 @@ MPLS is functioning as expected, with label 16 being used to forward packets fro
 
 ## 3.1 Can you use Wireshark to see the MPLS packets?
 
-Yes I can. Let's do it.
+Yes, I can. Let's do it.
 
-I decided to start capturing between `router-2` and `router-3`. I will make request from `host-4` to `host-2`.
+I decided to start capturing between `router-2` and `router-3`. I will make a request from `host-4` to `host-2`.
 
 ![image](https://github.com/user-attachments/assets/8973cfc0-0626-4512-a4a2-a30cb4ccbe44)
 
-We can see some MPLS headers. 
+We can see some MPLS headers:
 
-- MPLS Label = 16, because it must be sent on `router-1`.
-- MPLS TTL (Time to live) = 63 (default is 64, but one hop is done)
-- MPLS Bottom of Label Stack = 1, mean that it is the last label in stack.
+- MPLS Label = 16, because it must be sent to `router-1`.
+- MPLS TTL (Time to Live) = 63 (default is 64, but one hop is done).
+- MPLS Bottom of Label Stack = 1, meaning it is the last label in the stack.
 
 ## 3.2 Look deeper into the MPLS packets: can you identify MAC address, ICMP, Ethernet header or something else useful?
 
-Yes we can, because MPLS packet is default packet with one additional header(MPLS Header).
+Yes, we can, because an MPLS packet is a default packet with one additional header (MPLS Header).
 
 ![image](https://github.com/user-attachments/assets/2534acc5-c3b5-474d-ba59-641b643d7cad)
 
@@ -212,23 +212,23 @@ Let's check LDP neighbors again.
 
 ![image](https://github.com/user-attachments/assets/d64706fc-713d-4631-b7f9-209d47a14555)
 
-It works! `router-1` and `router-3` became neighbors! Flags `DOtv` means LDP Hello message will be sent exactly from `router-1` to `router-3` and back.
+It works! `router-1` and `router-3` became neighbors! The flags `DOtv` mean the LDP Hello message will be sent exactly from `router-1` to `router-3` and back.
 
 ## 4.3 Find a way to prove that the two customers can communicate at OSI layer 2.
 
-I can use ping with MAC address. To make a request from `router-1` to `router-3`, I need to know `router-3` VPLS interface MAC address.
+I can use ping with the MAC address. To make a request from `router-1` to `router-3`, I need to know `router-3`'s VPLS interface MAC address.
 
 ![image](https://github.com/user-attachments/assets/66a084a7-2636-4de3-85ea-668d5e36bf29)
 
-And the same thing to make reverse ping.
+And the same thing applies to make a reverse ping.
 
 ![image](https://github.com/user-attachments/assets/aa58f33b-05f9-44e4-9172-96f0ac4be4e3)
 
-Let's take a look in Wireshark. I will capture between `router-1` and `router-2`
+Let's take a look in Wireshark. I will capture traffic between `router-1` and `router-2`.
 
 ![image](https://github.com/user-attachments/assets/746dab2f-3bfd-4899-bc61-d3dbc27fc9f2)
 
-We can see 2 label 20 (MPLS) and 22 (VPLS).
+We can see two labels: label 20 (MPLS) and label 22 (VPLS).
 
 ## 4.4 Is it required to disable PHP? Explain your answer.
 
