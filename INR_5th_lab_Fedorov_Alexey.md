@@ -1,4 +1,4 @@
-# INR Lab 5
+# INR Lab 5: QoS
 
 ## Done by Fedorov Alexey
 
