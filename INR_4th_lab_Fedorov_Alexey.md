@@ -8,7 +8,7 @@
 
 ## 1.1 In the GNS3 project, select and install a virtual routing solution that you would like to use: Mikrotik (recommended), Pfsense, vyos and so on.
 
-I use MIkrotik, as in previous labs.
+I am using MikroTik, as in previous labs.
 
 ## 1.2 Prepare a simple network consisting of at least 3 routers, each one of them has a different subnet, and they should be able to reach each other (for example by a switch/router in the middle or a bus topology). Do not write a static routes between different networks.
 
@@ -44,14 +44,14 @@ Final topology:
 
 # Task 2 - OSPF Learning & Configuring
 
-OSPF (Open Shortest Path First) is a dynamic IP routing protocol designed to identify the most efficient route for data packets. Functioning within a single autonomous system, it employs link-state routing, allowing each router to build a comprehensive topology map of the network. By exchanging link-state advertisements, routers collectively construct this map and determine optimal paths using Dijkstra's algorithm. OSPF offers features such as load balancing, rapid convergence, and hierarchical network organization through the use of areas.
+**OSPF** (Open Shortest Path First) is a dynamic IP routing protocol designed to identify the most efficient route for data packets. Functioning within a single autonomous system, it employs link-state routing, allowing each router to build a comprehensive topology map of the network. By exchanging link-state advertisements, routers collectively construct this map and determine optimal paths using Dijkstra's algorithm. OSPF offers features such as load balancing, rapid convergence, and hierarchical network organization through the use of areas.
 
 How OSPF Works:
 
-- Link-State Routing - Each router builds and maintains a topological map of the network rather than relying on distance-vector metrics. Routers exchange Link-State Advertisements (LSAs) to share network topology information.
-- Dijkstra’s Algorithm - OSPF uses Dijkstra’s Shortest Path First (SPF) algorithm to compute the best routes. Every router calculates the shortest path independently based on the network topology.
-- Hierarchical Structure - OSPF networks are divided into areas, reducing overhead and improving efficiency. Backbone Area (Area 0) connects all other areas and ensures seamless routing between them.
-- Fast Convergence & Load Balancing - OSPF quickly updates routing tables when network changes occur, reducing downtime. It supports Equal-Cost Multi-Path (ECMP), allowing multiple routes with the same cost to be used simultaneously.
+- **Link-State Routing** - Each router builds and maintains a topological map of the network rather than relying on distance-vector metrics. Routers exchange Link-State Advertisements (LSAs) to share network topology information.
+- **Dijkstra’s Algorithm** - OSPF uses Dijkstra’s Shortest Path First (SPF) algorithm to compute the best routes. Every router calculates the shortest path independently based on the network topology.
+- **Hierarchical Structure** - OSPF networks are divided into areas, reducing overhead and improving efficiency. Backbone Area (Area 0) connects all other areas and ensures seamless routing between them.
+- **Fast Convergence & Load Balancing** - OSPF quickly updates routing tables when network changes occur, reducing downtime. It supports Equal-Cost Multi-Path (ECMP), allowing multiple routes with the same cost to be used simultaneously.
 
 ## 2.1 Deploy OSPF in your chosen network topology.
 
@@ -73,7 +73,7 @@ Let's check whether it works:
 
 ![image](https://github.com/user-attachments/assets/e8775473-c9f7-4618-8d27-01c2f2edad14)
 
-We can connect to any client from client1. Everything works!
+We can connect to any client from `client-1`. Everything works!
 
 ## 2.2 Which interface you will select as the OSPF router ID and why? 
 
@@ -87,11 +87,11 @@ In OSPF, choosing between advertising all networks or manually defining individu
 
 To inform OSPF neighbors about a static route, it must be redistributed into OSPF. Redistribution enables routes obtained from other sources, such as static routes, to be shared within the OSPF network, allowing OSPF neighbors to learn and utilize them.
 
-I refactored network topology:
+I refactored the network topology:
 
 ![image](https://github.com/user-attachments/assets/c403f4b1-f178-4a0b-95fc-74ba78b9ed3b)
 
-Then I prepared `client-5`.
+Then, I prepared `client-5`.
 
 ![image](https://github.com/user-attachments/assets/89510545-6a64-4a56-b655-34923c1f72bd)
 
@@ -103,15 +103,15 @@ Prepared `router-1` and `router-5`:
 `router-5`
 ![image](https://github.com/user-attachments/assets/127729ea-d620-4b63-8946-d98b5e12372b)
 
-I added static route on `router-1` to react `client-5`.
+I added a static route on `router-1` to reach `client-5`.
 
 ![image](https://github.com/user-attachments/assets/0627e243-839c-4e2a-bcc0-e2df57b6bbe6)
 
-After that, I enabled in OSPF preferences of Router 4 redistribution of static routes.
+After that, I enabled the redistribution of static routes in the OSPF preferences of `router-4`.
 
 ![image](https://github.com/user-attachments/assets/1b80a836-1976-429c-8614-2ac66e261942)
 
-I also made `ether1` on `router-5` default.
+I also set `ether1` on `router-5` as the default interface.
 
 ![image](https://github.com/user-attachments/assets/c937ff17-8288-4f32-865f-2a0a9fc6cc56)
 
@@ -119,7 +119,7 @@ Let's check connectivity.
 
 ![image](https://github.com/user-attachments/assets/95753fa7-25f3-4546-8558-df8a63ffe066)
 
-Everything good! Static route were redistributed.
+Everything is good! The static routes were redistributed successfully.
 
 ## 2.5 Enable OSPF with authentication between the neighbors and verify it.
 
@@ -129,9 +129,9 @@ For authentication, I used the MD5 method and applied it on all the border inter
 
 ![image](https://github.com/user-attachments/assets/a9e2fe29-1630-4bcd-8277-db22ae31119a)
 
-Moreover, we need protection only on template 1, because we want to turn off authentication between routers.
+Moreover, we need protection only on template 1, because we want to turn off authentication between the routers.
 
-Here is configurations for all routers.
+Here are the configurations for all routers.
 
 ![image](https://github.com/user-attachments/assets/3aaae106-64a6-4cc0-a284-cd7ceb680d9d)
 
@@ -141,7 +141,7 @@ Here is configurations for all routers.
 
 ![image](https://github.com/user-attachments/assets/16be38f2-6bcf-4d23-b1f7-3d2840fa3fa2)
 
-To confirm that the system is functioning correctly, I checked the neighbor status on `router-3`. The output shows a state "Full," which signifies that the OSPF adjacency has been successfully established and the routers are fully synchronized.
+To confirm that the system is functioning correctly, I checked the neighbor status on `router-3`. The output shows a state of **"Full,"** which signifies that the OSPF adjacency has been successfully established and the routers are fully synchronized.
 
 ![image](https://github.com/user-attachments/assets/417d2d5b-acb4-4e76-9a71-c2df2c3a2c5e)
 
@@ -149,13 +149,13 @@ To confirm that the system is functioning correctly, I checked the neighbor stat
 
 ## 3.1 How can you check if you have a full adjacency with your router neighbor?
 
-To confirm this, I need to ensure that the OSPF neighbor relationship has reached the **Full** state. As mentioned in task 2.5, the **Full** state signifies that OSPF routers have successfully exchanged their link-state information and are fully synchronized. For instance, I checked the neighbor status on `router-4`, and the state parameter shows a value of **"Full"**.
+To confirm this, I need to ensure that the OSPF neighbor relationship has reached the **"Full"** state. As mentioned in task 2.5, the **"Full"** state signifies that OSPF routers have successfully exchanged their link-state information and are fully synchronized. For instance, I checked the neighbor status on `router-4`, and the state parameter shows a value of **"Full"**.
 
 ![image](https://github.com/user-attachments/assets/a9da0255-88da-4352-821c-c89b99f14239)
 
 ## 3.2 How can you check in the routing table which networks did you receive from your neighbors?
 
-To check the routes received from OSPF neighbors, we use the command:  
+To check the routes received from OSPF neighbors, we use the command:
 
 ```bash
 /ip route print where ospf
@@ -167,7 +167,7 @@ This command displays all routes that were learned through OSPF, allowing us to 
 
 ## 3.3 Use traceroute to verify that you have a full OSPF network.
 
-Let's test network with traceroute. I will check route from `router-1` to `client-4`
+Let's test the network with `traceroute`. I will check the route from `router-1` to `client-4`.
 
 ![image](https://github.com/user-attachments/assets/fc777275-c533-4638-ba7c-0050a09d7d65)
 
