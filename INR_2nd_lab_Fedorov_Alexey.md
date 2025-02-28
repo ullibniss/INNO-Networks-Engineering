@@ -199,6 +199,80 @@ Let's change web page.
 
 ![image](https://github.com/user-attachments/assets/b4ae0fd3-3316-491a-97e1-0a85635b356c)
 
+
 ### Why are you able to do this here and not in an SSH connection?
 
 HTTP traffic is insecure, allowing any information in a request to be modified, unlike SSH, which uses public key cryptography to protect against Man-in-the-Middle attacks.
+
+# Task 3 - IPv6
+
+## 3.1 Configure IPv6 from the Web Server to the Worker. This includes IPs on the servers and the default gateway.
+
+Firstly I reconfigured all hosts and Router.
+
+Router:
+
+![image](https://github.com/user-attachments/assets/05f951f5-b21c-40fe-a660-ce3ca4fa9ddc)
+
+Hosts:
+
+![image](https://github.com/user-attachments/assets/119781e2-82e9-4db6-9f15-b5372c2d0dda)
+
+![image](https://github.com/user-attachments/assets/717a7d63-839d-48e7-84a6-99e58e23323b)
+
+![image](https://github.com/user-attachments/assets/8ce5d052-8a78-4f36-ba4b-c8a7bf6e77c4)
+
+Let's test connection:
+
+![image](https://github.com/user-attachments/assets/c732c1d5-39ec-4497-8496-9faa7176a2e8)
+
+It works!
+
+## 3.2 Access the Web's http page using IPv6 from Admin while capturing the traffic again. Can you see the difference? What's the difference in packages? Explain.
+
+I start capture. Let's access the page.
+
+![image](https://github.com/user-attachments/assets/e729a96a-cad2-4fa1-a568-ff52b1360593)
+
+![image](https://github.com/user-attachments/assets/d6324b6a-316b-43e1-93ff-ae4b8738a02a)
+
+In this scenario, we observe that both the Source and Destination addresses are expressed in IPv6 format (16 bytes). Additionally, the ICMPv6 protocol is used for Neighbor Advertisement. Moreover the length of the IPv6 packet is shorter compared to IPv4. This is because of absence of fields that are present in IPv4 packets.
+
+## 3.3 Practice in IPv6 addresses compressing and decompressing. Write your used IPv6 addresses both in full and compact mode. Provide the calculation chain.
+
+Web:
+- Short: 2001:db8:1::3
+- Long: 2001:0db8:0001:0000:0000:0000:0000:0003
+
+Admin:
+- Short: 2001:db8:1::2
+- Long: 2001:0db8:0001:0000:0000:0000:0000:0002
+
+Worker:
+- Short: 2001:db8:2::2
+- Long: 2001:0db8:0002:0000:0000:0000:0000:0002
+
+Router:
+- Short: 2001:db8:1::1
+- Long: 2001:0db8:0001:0000:0000:0000:0000:0001
+- Short: 2001:db8:2::1
+- Long: 2001:0db8:0002:0000:0000:0000:0000:0001
+
+### Calculates
+
+Long -> Short
+1) Remove leading zeros from each hexlet
+2) Replace zero hexlets with `::` . Neighbour zero hexlets is replaces by one `::`
+
+Short -> Long
+1) Determine amount of hexlets - n, count N = 8-n
+2) Insert N zero hexlets in `::`
+3) Restore leading zeros of other hexlets
+
+# Reference
+
+- https://ru.wikipedia.org/wiki/IPv6-%D0%B0%D0%B4%D1%80%D0%B5%D1%81
+- https://www.reddit.com/r/commandline/comments/15uaes9/netstat_vs_ss_socket_statistics/
+- https://unix.stackexchange.com/questions/412446/how-to-disable-ping-response-icmp-echo-in-linux-all-the-time
+- https://portswigger.net/burp/documentation/desktop/tools/proxy/intercept-messages
+- https://help.mikrotik.com/docs/spaces/ROS/pages/328247/IP+Addressing
