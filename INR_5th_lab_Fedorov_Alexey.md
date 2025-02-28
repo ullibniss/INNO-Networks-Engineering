@@ -8,7 +8,7 @@
 
 ## 1.1 In the GNS3 project, select and install a virtual routing solution that you would like to use: Mikrotik (recommended), Pfsense, vyos and so on.
 
-I used Mikrotik appliance.
+I used a MikroTik appliance.
 
 ## 1.2 Prepare a simple network consisting of at least one router and two hosts. About four hosts in the network are most optimal. You also might need Internet access for the hosts. It may be something like this, just for the imagination:
 
@@ -28,7 +28,7 @@ Clients configuration:
 
 ![image](https://github.com/user-attachments/assets/667aa17d-cd1d-4c36-bc89-e1c31b5e1760)
 
-As a result I got the following topology:
+As a result, I got the following topology:
 
 ![image](https://github.com/user-attachments/assets/68d02924-f168-4b91-b4a9-311451c80793)
 
@@ -76,9 +76,9 @@ To set a speed limit between `client-1` and `client-4`, I used `/queue/simple`. 
 
 ## 2.3 Run a bandwidth testing tool, see what is the max speed you can get and verify your speed limitation. Compare the speed between the different hosts.
 
-I used `iperf3` for testing. `iperf3` is a tool to check network performance. It measures speed, delay, and other network details between two devices. It works in client-server mode and is often used to find and fix network problems.
+I used `iperf3` for testing. `iperf3` is a tool to check network performance. It measures speed, delay, and other network details between two devices. It works in client-server mode and is often used to identify and troubleshoot network issues.
 
-There server and client mode on `iperf3`. I will use client mode on client from i want to make request and server mode on client to i want make request.
+There are server and client modes in `iperf3`. I will use client mode on the device from which I want to make the request and server mode on the device to which I want to make the request.
 
 ### Test: client-1 -> client-4
 
@@ -88,11 +88,11 @@ Running client mode on `client-1` and server mode on `client-4`:
 
 ![image](https://github.com/user-attachments/assets/c0e3b722-2cf2-49b0-b47e-312b2d89f745)
 
-As we can see network speed is about 322Kbit/sec. Limitations works!
+As we can see, the network speed is about 322 Kbit/sec. The limitations are working!
 
 ### Test: client-1 -> client-3
 
-This test must show us that limitations work only for `client-1` -> `client-4` route.
+This test must show us that the limitations work only for the `client-1` -> `client-4` route.
 
 Running client mode on `client-1` and server mode on `client-3`:
 
@@ -100,11 +100,11 @@ Running client mode on `client-1` and server mode on `client-3`:
 
 ![image](https://github.com/user-attachments/assets/2cee85ea-76fc-40b5-8175-cfc8cb8742c0)
 
-Bitrate - 1Mbits/sec. This means that limitation does not work for `client-1` -> `client-3` route. Everything correct.
+Bitrate - 1 Mbits/sec. This means that the limitation does not work for the `client-1` -> `client-3` route. Everything is correct.
 
 ## 2.4 While your bandwidth test is still running, try to download a file from one host to the other host and see what is the max speed you can get. If you have more than two hosts on the network, play around with different speed values and show it.
 
-I need to create large file for testing. I used `dd` to generate file:
+I need to create a large file for testing. I used `dd` to generate the file:
 
 ```
 dd if=/dev/urandom of=test bs=322K count=1337
@@ -114,17 +114,17 @@ dd if=/dev/urandom of=test bs=322K count=1337
 
 ### Test: file transfer `client-1` -> `client-4`:
 
-I can measure file transfer bitrate with `iperf3`.
+I can measure the file transfer bitrate with `iperf3`.
 
 ![image](https://github.com/user-attachments/assets/6b0bb33d-ac8a-4440-bd82-48e4b1871ead)
 
 ![image](https://github.com/user-attachments/assets/28d57f0c-fb51-4d70-8e69-56383d480e59)
 
-As we can see, file transfer has the same bitrate.
+As we can see, the file transfer has the same bitrate.
 
 ### Test: file transfer `client-1` -> `client-4`, but another limit
 
-I changed limit for route. Limit is 133K.
+I changed the limit for the route. The new limit is 133K.
 
 ![image](https://github.com/user-attachments/assets/3d36ddb5-33d9-4689-b609-af430f3014bc)
 
@@ -134,24 +134,24 @@ Let's run file transfer.
 
 ![image](https://github.com/user-attachments/assets/51b6d056-3b48-4cca-9516-49aa719bee34)
 
-New limitations were applied.
+New limitations have been applied.
 
 ## 2.5 Deploy and verify your QoS rules to prioritize the downloading of a file (or any other scenario) over the bandwidth test.
 
-To configure QoS rules, I user the mangle table in firewall. Mangle is a firewall functionality that allows marking and modifying packets to enable advanced routing, traffic shaping, and bandwidth management. 
+To configure QoS rules, I used the mangle table in the firewall. Mangle is a firewall functionality that allows marking and modifying packets to enable advanced routing, traffic shaping, and bandwidth management.
 
-I set up two rules: 
+I set up two rules:
 
-- For transfer traffic
-- For iperf3 test traffic
+- One for file transfer traffic
+- One for `iperf3` test traffic
 
-Both rules are port-based. Iperf operates on port 5201.
+Both rules are port-based. `iperf3` operates on port 5201.
 
-Let's configure it on router.
+Let's configure it on the router.
 
 ![image](https://github.com/user-attachments/assets/fd7ed96c-f2f9-48ce-9719-ae3280e168ad)
 
-When rules are ready, let's configure QoS rules? based on packet marks.
+When the rules are ready, let's configure QoS rules based on packet marks.
 
 ![image](https://github.com/user-attachments/assets/accfb71f-89d3-4e2c-bd7f-0429e491c6cb)
 
@@ -163,13 +163,13 @@ Let's test configurations.
 
 ![image](https://github.com/user-attachments/assets/3a577708-de67-4422-8a6b-ab7cc583ce40)
 
-Here we can see that limitations works. Note: on first picture receiver has 0 bitrate because I interrupted transfer. This is reason why I inserted 2nd picture with receiver
+Here we can see that the limitations work. Note: In the first picture, the receiver has a 0 bitrate because I interrupted the transfer. This is the reason why I inserted a second picture with the receiver.
 
 ### Test: default iperf3 benchmark (`client-2` -> `client-4`)
 
 ![image](https://github.com/user-attachments/assets/342ee891-04b5-4ab2-bcaf-bb227dace5f7)
 
-Bitrate is near 250K/sec. Rules works!
+The bitrate is near 250K/sec. The rules work!
 
 ## 2.6 What is the difference between the QoS rules to traffic allocation and priority-based QoS? Try to set up each of them and show then them. In which tasks of this lab do you use one or the other?
 
@@ -179,7 +179,7 @@ Bitrate is near 250K/sec. Rules works!
 
 ### Test: Traffic Allocation QoS
 
-I configured different speed, but equal priority.
+I configured different speeds but equal priority.
 
 ![image](https://github.com/user-attachments/assets/2aa4189c-66a9-4969-9ad1-6240c4319e5e)
 
@@ -187,11 +187,11 @@ I configured different speed, but equal priority.
 
 ![image](https://github.com/user-attachments/assets/72d1f5fa-9fed-498f-a9c6-428f7f3d6d03)
 
-As we can see, default iperf3 test and file transfer have different bitrate.
+As we can see, the default `iperf3` test and file transfer have different bitrates.
 
 ### Test: Priority-Based QoS
 
-In this case speed is equal, but priority is different. 
+In this case speeds are equal, but priority is different. 
 
 ![image](https://github.com/user-attachments/assets/945e946a-66b0-4abd-bd41-a6fa7a5d37a4)
 
@@ -199,13 +199,13 @@ In this case speed is equal, but priority is different.
 
 ![image](https://github.com/user-attachments/assets/057abad3-5f3f-455e-8b4b-6b54c3fce221)
 
-Results are good. File transfer with stict priority has bigger bitrate than default iperf3 test.
+The results are good. The file transfer with strict priority has a higher bitrate than the default `iperf3` test.
 
 ## 2.7 Choice and install any tool that you like for bandwidth control/netflow analysis/network control & monitoring. Play around with the network settings and show the different QoS metrics via UI.
 
-The mojority of tools for with GUI are to complex (for example Zabbix, Nagios - general purpose monitoring systems). On the other hand, the are many good CLI tools to Analyze, but they have no UI. I decided to use built in Mikrotik tools, because it is very convenient.
+The majority of tools with a GUI are too complex (for example, Zabbix and Nagios — general-purpose monitoring systems). On the other hand, there are many good CLI tools for analysis, but they lack a UI. I decided to use built-in MikroTik tools because they are very convenient.
 
-I will use `torch` tool. Using this tool we can see exact bitrate of our rules in test runtime.
+I will use the `torch` tool. Using this tool, we can see the exact bitrate of our rules in real-time during the test.
 
 iperf3 default:
 
@@ -243,19 +243,19 @@ Another cause is **misconfigurations** in the network setup. For example, mismat
 
 ### Queue stats
 
-We can use `queue tree print stats` command to show some statistics of usage of our rules.
+We can use the `queue tree print stats` command to show some statistics on the usage of our rules.
 
 ![image](https://github.com/user-attachments/assets/95b09814-faa0-42b2-a8ab-e689f37b7a9f)
 
 ### Firewall stats
 
-We can also watch stats on firewall tables. In my case is `mangle`.
+We can also watch stats on firewall tables. In my case, it is `mangle`.
 
 ![image](https://github.com/user-attachments/assets/31edefdd-b07c-40e8-9463-1b405e0e7703)
 
 ### Benchmark tools
 
-Tools for benchmark (`iperf3`, that we used earlier or `iftop`) are also useful to determine whether rules work or not.
+Tools for benchmarking (`iperf3`, which we used earlier, or `iftop`) are also useful to determine whether the rules work or not.
 
 ## 3.2 Try to use Wireshark to see the QoS packets. How does this depend on the number of routers in the network topology?
 
