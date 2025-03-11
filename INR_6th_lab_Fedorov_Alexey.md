@@ -14,6 +14,8 @@ I use MikroTik.
 
 I created a BUS topology and preconfigured OSPF.
 
+![image](https://github.com/user-attachments/assets/36b09b98-4401-4b1d-896e-a80a7dad2c9d)
+
 Let's check connectivity.
 
 ![image](https://github.com/user-attachments/assets/95c21844-ba46-4558-9329-f6c4e9cbbc2f)
