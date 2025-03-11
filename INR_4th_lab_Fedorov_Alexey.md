@@ -81,7 +81,31 @@ In OSPF, the Router ID is a distinct 32-bit identifier assigned to each router t
 
 ## 2.3. What is the difference between advertising all the networks VS manual advertising (per interface or per subnet)? Which one is better?
 
-In OSPF, choosing between advertising all networks or manually defining individual networks depends on the network architecture, the level of administrative control required, and the desired routing efficiency.
+In OSPF, choosing between advertising all networks and manually specifying individual networks depends on network design, administrative control, and routing efficiency goals.  
+
+### Advertising All Networks  
+This approach allows OSPF to automatically include all connected interfaces with an IP address in the routing process. It is usually configured using a wildcard mask that covers all subnets.  
+
+**Advantages:**  
+- Automatically advertises new networks/interfaces as they are added, without requiring reconfiguration.  
+- Better for smaller, less complex networks where strong control is unnecessary.  
+
+**Disadvantages:**  
+- May include unnecessary routes if some networks or interfaces do not need OSPF advertisement.  
+- Increases OSPF traffic and CPU load since all interfaces participate.  
+
+### Manual Advertising  
+This method involves specifying each network individually in OSPF, allowing control over which interfaces and subnets are included.  
+
+**Advantages:**  
+- Reduces unnecessary OSPF entries by advertising only required networks, potentially improving security.   
+- More suitable for larger, segmented networks where isolation of certain interfaces is needed.  
+
+**Disadvantages:**  
+- Requires manual configuration for each network or subnet and must be updated when changes occur.  
+- Higher risk of errors or omissions due to the manual setup process.  
+
+In general, manual advertising is preferred for scalability and security, while advertising all networks is ideal for simpler environments where ease of management is the priority.
 
 ## 2.4 If you have a static route in a router, how can you let your OSPF neighbors know about it? Approve and show it on practice.
 
